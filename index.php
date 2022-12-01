@@ -40,11 +40,71 @@
                     echo  '<option value = "',$i,'"class="dropdown-item" style="color:black; background-color:white; border; 1px black">',  $arr[$i][0], '</option>';
                     $i++;
                 }
-                
                 ?>
+
             </div>    
         </select>
+        </div>
+
+        <div class="container">
+            <?php
+            if(file_exists('prasyarat.json')) {
+                $filename = 'prasyarat.json';
+                $data = file_get_contents($filename); //data read from json file
+                // print_r($data);
+                $users = json_decode($data);  //decode a data
             
+                // print_r($users); //array format data printing
+                 $message = "<h3 class='text-success'>JSON file data</h3>";
+            }
+            else {
+                 $message = "<h3 class='text-danger'>JSON file Not found</h3>";
+            }
+            // // Read the JSON file 
+            // $json = file_get_contents('prasyarat.json');
+                
+            // // Decode the JSON file
+            // $json_data = json_decode($json,true);
+                
+            // // Display data
+            // print_r($json);
+            ?>
+            <div class="table-container">
+                <?php
+                        if(isset($message))
+                        {
+                            echo $message;
+
+                        ?>
+                    <table id="tbstyle">
+                        <tbody>
+                            <tr>
+                                <th>Kode</th>
+                                <th>Nama</th>
+                                <th>SKS</th>
+                                <th>WAAJIB</th>
+                                <th>Semester</th>
+                            </tr>
+                            <?php foreach ($users as $user) { ?>
+                            <tr>
+                                <td> <?= $user->kode; ?> </td>
+                                <td> <?= $user->nama; ?> </td>
+                                <td> <?= $user->sks; ?> </td>
+                                <td> <?= $user->wajib; ?> </td>
+                                <td> <?= $user->semester; ?> </td>
+                            </tr>
+                            <?php }
+                        }
+                        else
+                            echo $message;
+                        ?>
+                </tbody>
+            </table>
+            </div>
+        </div>
+        
+        <div>
+
         </div>
     </body>
 </html>
