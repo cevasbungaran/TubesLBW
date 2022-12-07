@@ -204,7 +204,7 @@
                     </div>
                 </div>
             </div>
-            <input type="submit" class="btn btn-info" value="Submit Button">
+            <input type="submit" class="btn btn-info" value="Submit Button" style="margin: 10px; margin-right: 13%; float:right;">
         </form>
 
 
