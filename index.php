@@ -204,6 +204,7 @@
                     </div>
                 </div>
             </div>
+            <input type="submit" class="btn btn-info" value="Submit Button">
         </form>
 
 
