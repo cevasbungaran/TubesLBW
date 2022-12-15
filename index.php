@@ -45,19 +45,19 @@
                     <div class="dropdown-menu">
                         <?php
                             $csv = fopen("biaya.csv", "r"); // baca file csv
-                            $i = 0; // counter untuk loop
+                            $k = 0; // counter untuk loop
                             $arr = array();
                             while (($row = fgetcsv($csv)) !== FALSE) {
                                 $arr[] = $row;
                             }
                             fclose($csv);
 
-                            while($i < sizeof($arr)){
+                            while($k < sizeof($arr)){
                                 // ambil dari baris ke 1
-                                if ($i > 0) {
-                                    echo  '<option value = "',$i,'"class="dropdown-item" style="color:black; background-color:white; border; 1px black">',  $arr[$i][0], '</option>';
+                                if ($k > 0) {
+                                    echo  '<option value = "',$arr[$k][0],'"class="dropdown-item" style="color:black; background-color:white; border; 1px black">',  $arr[$k][0], '</option>';
                                 }
-                                $i++;
+                                $k++;
                             }
                         ?>
                     </div>    
@@ -89,18 +89,12 @@
                 $selectedArrSemester = $_POST['dropSemester']; // menyimpan index dari semester yang dipilih
 
                 // baca file csv
-                $csv = fopen("biaya.csv", "r");
-                $arr = array();
-                while (($row = fgetcsv($csv)) !== FALSE) {
-                    $arr[] = $row;
-                    
-                }
-                fclose($csv);
-
-                $biayaSKS = $arr[$selectedArrAngkatan][1]; // menyimpan biaya sks sesuai angkatan yang dipilih
+                 // menyimpan biaya sks sesuai angkatan yang dipilih
                 // echo "Angkatan yang dipilih: ". $arr[$selectedArrAngkatan][0]. "<br>"; // display angkatan yang dipilih
                 // echo "Biaya per SKS: ". $biayaSKS. "<br>"; // display biaya sks berdasarkan angkatan yang dipilih
                 // echo "Semester: ". $selectedArrSemester. "<br>"; // display semester yang dipilih
+            }else{
+                $selectedArrSemester = "Silahkan Pilih Semester dan Angkatan Anda";
             }
         ?>
 
@@ -118,18 +112,6 @@
                     else {
                         $message = "<h3 class='text-danger'>JSON file Not found</h3>";
                     }
-
-                    // check jika tombol Submit ditekan
-                    if (isset($_POST['submitMatkul'])) {
-                        // Iterate over the categories and check if they are selected
-                        foreach ($users as $user) {
-                            // check apakah checkbox telah dipilih
-                            if (isset($_POST['check'])) {
-                                // Print the selected category
-                                echo "mata kuliah yang dipilih: ". $user->nama . "<br>";
-                            }
-                        }
-                    }
                 ?>
 
                 <h2> Semester <?php echo $selectedArrSemester?> </h2>
@@ -142,18 +124,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $totalSKS = 0;
+                        <?php
                         foreach ($users as $user) { ?>
                             <tr>
                                 <?php if($user->semester == $selectedArrSemester){?>
                                 <td><?php echo $user->kode; ?> </td>
                                 <td> <?php echo $user->nama; ?> </td>
                                 <td> <?php echo $user->sks; ?> </td>
-                                <td> <input type="checkbox" id="check" name="check" value= "check"> </td>
+                                <td> <input type="checkbox" id="check" name="check" value= " <?php echo $user->kode;?> "> </td>
                             </tr>
-                                <?php 
-                                    $totalSKS += $user->sks;
-                                ?>
+                                <!-- <?php 
+                                    //$totalSKS += $user->sks;
+                                ?> -->
                                 <?php }}?>
                     </tbody>
                 </table>
@@ -164,9 +146,44 @@
 
                 <!-- nanti dipindah di isset check kalo udh jalan checkboxnya-->
                 <?php
-                    echo "Total sks yang diambil adalah: ". $totalSKS. "<br>";
-                    $totalBiayaSKS = $biayaSKS * $totalSKS;
-                    echo "Total pembayaran SKS semester ". $selectedArrSemester. " adalah: Rp ". $totalBiayaSKS. "<br>";
+                $biayaSKS = 0;
+                if(isset($_POST['dropAngkatan'])){
+                    $selectedArrAngkatan = $_POST['dropAngkatan'];
+                    $csv = fopen("biaya.csv", "r");
+                    $arr = array();
+                    while (($row = fgetcsv($csv)) !== FALSE) {
+                        $arr[] = $row;
+                        
+                    }
+                    fclose($csv);
+                    
+                    for($a = 0; $a < count($arr);$a++){
+                        if($arr[$a][0] == $selectedArrAngkatan){
+                            $biayaSKS = $arr[$a][1];
+                        }
+                    }
+                }
+                
+                $totalBiayaSKS = 0;
+                $totalSKS = 0;
+                    // check jika tombol Submit ditekan
+                    if (isset($_POST['submitMatkul'])) {
+                            if (isset($_POST['check'])) {
+                                $selectMatkul = $_POST['check'];
+                                foreach($users as $user2){
+                                    if($user2->kode == $selectMatkul){
+                                        $totalSKS = $user2->sks;
+                                    }
+                                }
+                                
+                            }
+                            echo $totalSKS;
+                            // Print the selected category
+                            echo "mata kuliah yang dipilih: ". $user->nama . "<br>";
+                            echo "Total sks yang diambil adalah: ". $totalSKS. "<br>";
+                            $totalBiayaSKS = $biayaSKS * $totalSKS;
+                            echo "Total pembayaran SKS semseter ini adalah: Rp ". $totalBiayaSKS. "<br>";
+                    }
                 ?>
             </div>
         </form>
