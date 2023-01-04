@@ -18,6 +18,16 @@
             }
         </style>
     </head>
+    <script>
+        var total=0;
+        function checker(i){
+
+            var sks=document.getElementById('check'+i).value;
+            
+            total=total+sks;           
+            console.log(total)
+        }
+    </script>
 
     <body>
         <!-- navbar -->
@@ -125,15 +135,18 @@
                     </thead>
                     <tbody>
                         <?php
+                        $totalSKS = 0;
+                        $i=0;
                         foreach ($users as $user) { ?>
                             <tr>
                                 <?php if($user->semester == $selectedArrSemester){?>
                                 <td><?php echo $user->kode; ?> </td>
                                 <td> <?php echo $user->nama; ?> </td>
                                 <td> <?php echo $user->sks; ?> </td>
-                                <td> <input type="checkbox" id="check" name="check" value= " <?php echo $user->kode;?> "> </td>
+                                <td> <input type="checkbox" id="check<?php echo $i;?>" onclick="checker(<?php echo $i;?>)" name="cek.<?php echo $user->kode;?>" value= " <?php echo $user->sks;?> "> </td>
                             </tr>
                                 <!-- <?php 
+                                $i++;
                                     //$totalSKS += $user->sks;
                                 ?> -->
                                 <?php }}?>
@@ -164,24 +177,27 @@
                     }
                 }
                 
+
+                
+
                 $totalBiayaSKS = 0;
-                $totalSKS = 0;
+                //$totalSKS = 0;
+                $selectMatkul = array();
                     // check jika tombol Submit ditekan
                     if (isset($_POST['submitMatkul'])) {
-                            if (isset($_POST['check'])) {
-                                $selectMatkul = $_POST['check'];
-                                foreach($users as $user2){
-                                    if($user2->kode == $selectMatkul){
-                                        $totalSKS = $user2->sks;
-                                    }
-                                }
-                                
-                            }
+                        if(isset($_POST["cek.$user->kode"])){
+                            $selectMatkul[] = $_POST["cek.$user->kode"];
+
+                        }
+                            print_r($selectMatkul);
+                            $totalBiayaSKS = $totalBiayaSKS + $biayaSKS * 20;
                             echo $totalSKS;
-                            // Print the selected category
+                           
                             echo "mata kuliah yang dipilih: ". $user->nama . "<br>";
-                            echo "Total sks yang diambil adalah: ". $totalSKS. "<br>";
-                            $totalBiayaSKS = $biayaSKS * $totalSKS;
+                            echo "Total sks yang diambil adalah: <div id=sksdiv></div> <br>";
+                            echo "<script>function inject(){
+                                document.getElementById(`sksdiv`).innerHTML=total;
+                            }inject()</script>";
                             echo "Total pembayaran SKS semseter ini adalah: Rp ". $totalBiayaSKS. "<br>";
                     }
                 ?>
@@ -189,4 +205,8 @@
         </form>
 
     </body>
+
+
+
+
 </html>
