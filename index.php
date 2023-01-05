@@ -54,7 +54,7 @@
                 <select type="button" name="dropAngkatan" id="dropAngkatan" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="color:white;">
                     <div class="dropdown-menu">
                         <?php
-                            $csv = fopen("biaya.csv", "r"); // baca file csv
+                            $csv = fopen("https://ftisunpar.github.io/data/biaya.csv", "r"); // baca file csv
                             $k = 0; // counter untuk loop
                             $arr = array();
                             while (($row = fgetcsv($csv)) !== FALSE) {
@@ -114,7 +114,7 @@
                 <?php
                     // check apakah file prasayat.json tersedia
                     if(file_exists('prasyarat.json')) {
-                        $filename = 'prasyarat.json';
+                        $filename = 'https://ftisunpar.github.io/data/prasyarat.json';
                         $data = file_get_contents($filename); // baca data dari json file
                         $users = json_decode($data);  // decode data json file
                         $message = "<h3 class='text-success'>Daftar Mata Kuliah</h3>";
@@ -189,10 +189,8 @@
                             $selectMatkul[] = $_POST["cek.$user->kode"];
 
                         }
-                            print_r($selectMatkul);
                             $totalBiayaSKS = $totalBiayaSKS + $biayaSKS * 20;
-                            echo $totalSKS;
-                           
+                        
                             echo "mata kuliah yang dipilih: ". $user->nama . "<br>";
                             echo "Total sks yang diambil adalah: <div id=sksdiv></div> <br>";
                             echo "<script>function inject(){
